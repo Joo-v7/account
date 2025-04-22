@@ -105,6 +105,13 @@
             <version>2.2.224</version>
         </dependency>
 
+        <!-- Spring Cloud Eureka Client 의존성 추가 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>4.2.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
