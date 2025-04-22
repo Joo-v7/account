@@ -1,7 +1,7 @@
 # default profile
 spring:
   application:
-    name: account-api
+    name: auth
 
   servlet:
     encoding:
