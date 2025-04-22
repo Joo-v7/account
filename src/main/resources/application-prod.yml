@@ -1,0 +1,6 @@
+# prod profile
+
+spring:
+  profiles: prod
+  server:
+    port: 8100
