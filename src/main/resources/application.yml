@@ -1,0 +1,26 @@
+# default profile
+spring:
+  application:
+    name: account-api
+
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+  # Eureka Client 설정
+  cloud:
+    discovery:
+      enabled: true # Eureka Client 활성화
+      client:
+        service-url:
+          defaultZone: http://admin:1234@localhost:8761/eureka/  # Eureka 서버 URL (로그인 정보 포함)
+
+
+# JWT
+jwt:
+  secret: '5+Nw1z0e8odajGdU0dpEwJ10OQeAfLB40/gLy5g530M='
+  expiration_time: 3600
+  token_prefix: Bearer
+  header_string: Authorization
+  login_url: /api/account/login
