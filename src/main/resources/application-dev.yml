@@ -1,6 +1,21 @@
 # dev profile
+server:
+  port: 9100
 
 spring:
-  profiles: dev
-  server:
-    port: 9100
+  config:
+    activate:
+      on-profile: dev
+
+  # H2
+  datasource:
+    url: jdbc:h2:mem:accountdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  # Hibernate
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
