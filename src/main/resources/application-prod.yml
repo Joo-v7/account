@@ -2,25 +2,4 @@
 server:
   port: 8100
 
-spring:
-  config:
-    activate:
-      on-profile: prod
-
-  # MySQL
-  datasource:
-    url: jdbc:mysql://43.203.214.85:3306/account?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: chokchok
-    password: 20182229
-
-  # Hibernate
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-
 
