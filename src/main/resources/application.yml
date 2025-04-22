@@ -8,14 +8,13 @@ spring:
       charset: UTF-8
       force: true
 
-  # Eureka Client 설정
-  cloud:
-    discovery:
-      enabled: true # Eureka Client 활성화
-      client:
-        service-url:
-          defaultZone: http://admin:1234@localhost:8761/eureka/  # Eureka 서버 URL (로그인 정보 포함)
-
+# Eureka Client 설정
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://admin:1234@localhost:8761/eureka/  # Eureka 서버 URL (로그인 정보 포함)
 
 # JWT
 jwt:
