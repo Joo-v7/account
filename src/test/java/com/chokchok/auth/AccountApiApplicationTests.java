@@ -1,4 +1,4 @@
-package com.chokchok.accountapi;
+package com.chokchok.auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
