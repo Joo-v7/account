@@ -19,6 +19,14 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    # github Actions을 위해 Redis 정보 - secrets를 환경변수로 주입
+    env:
+      JWT_SECRETS: ${{ secrets.JWT_SECRETS }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      REDIS_DATABASE: ${{ secrets.REDIS_DATABASE }}
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
@@ -28,7 +36,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file pom.xml -Dspring.profiles.active=prod
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
