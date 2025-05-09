@@ -1,4 +1,4 @@
-### 1. 로그인
+### 1. 로그인 성공
 POST http://localhost:9100/auth/login
 Content-Type: application/json
 
@@ -7,5 +7,11 @@ Content-Type: application/json
   "password": "securePassword123!"
 }
 
-###
-GET http://localhost:9100/auth/test
+### 2. 로그인 실패
+POST http://localhost:9100/auth/login
+Content-Type: application/json
+
+{
+  "id": "test@example.com",
+  "password": "securePassword123"
+}
