@@ -87,7 +87,7 @@
             <version>4.2.1</version>
         </dependency>
 
-        <!-- FeignClient -->
+        <!-- Open Feign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -99,6 +99,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
             <version>3.4.5</version>
+        </dependency>
+
+        <!-- 날짜 및 시간 API를 지원하는 Jackson 모듈 -->
+        <!-- ErrorResponseDto의 LocalDateTime 직렬화에 사용 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.18.3</version>
         </dependency>
 
     </dependencies>
