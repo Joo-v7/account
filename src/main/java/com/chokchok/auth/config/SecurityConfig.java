@@ -9,6 +9,9 @@ import com.chokchok.auth.security.filter.JwtAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,6 +29,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * Spring Security의 설정 Bean 등록 클래스
  */
+@Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
@@ -37,7 +41,7 @@ public class SecurityConfig {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Bean
-//    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
@@ -52,8 +56,6 @@ public class SecurityConfig {
                 objectMapper,
                 redisTemplate
         ), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilter(jwtAuthenticationFilter());
-//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeHttpRequests(authorize -> authorize
                 .anyRequest().permitAll()
@@ -61,42 +63,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    /**
-     * JWT 인증을 위해 UsernamePasswordAuthenticationFilter를 커스텀한 필터의 설정
-     * @return JwtAuthenticationFilter
-     * @throws Exception
-     */
-//    private JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-//        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(
-//                authenticationManager(null),
-//                jwtProperties,
-//                jwtProvider,
-//                objectMapper,
-//                redisTemplate
-//        );
-//
-//        jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
-//        jwtAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-//
-//        return jwtAuthenticationFilter;
-//    }
-
-//    @Bean
-//    public UsernamePasswordAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-//        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(
-//                authenticationManager(null),
-//                jwtProperties,
-//                jwtProvider,
-//                objectMapper,
-//                redisTemplate
-//        );
-//
-//        jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
-//        jwtAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-//
-//        return jwtAuthenticationFilter;
-//    }
 
     /**
      * AuthenticationManager 빈으로 등록합니다
@@ -130,15 +96,6 @@ public class SecurityConfig {
     public CustomUserDetailsService customUserDetailsService() {
         return new CustomUserDetailsService(memberClient);
     }
-
-    /**
-     * 인증 실패시 동작하는 핸들러
-     * @return AuthenticationFailureHandler - JwtFailureHandler
-     */
-//    @Bean
-//    public AuthenticationFailureHandler authenticationFailureHandler() {
-//        return new JwtFailureHandler();
-//    }
 
     /**
      * 비밀번호 암호화에 사용되는 PasswordEncoder을 Bean을 등록합니다.

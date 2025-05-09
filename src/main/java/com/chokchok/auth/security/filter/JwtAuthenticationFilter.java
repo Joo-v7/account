@@ -1,5 +1,6 @@
 package com.chokchok.auth.security.filter;
 
+import com.chokchok.auth.common.dto.ResponseDto;
 import com.chokchok.auth.common.exception.base.InvalidException;
 import com.chokchok.auth.common.exception.code.ErrorCode;
 import com.chokchok.auth.config.RedisHashKey;
@@ -14,9 +15,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,7 +30,7 @@ import java.io.PrintWriter;
 import java.util.stream.Collectors;
 
 /**
- * JWT 토큰 인증을 위해 UsernamePasswordAuthenticationFilter를 커스텀한 필터
+ * JWT 기반 인증을 위해 UsernamePasswordAuthenticationFilter를 커스텀한 필터
  */
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -48,7 +49,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.objectMapper = objectMapper;
         this.redisTemplate = redisTemplate;
 
+        // login url 설정
         setFilterProcessesUrl(jwtProperties.getLoginUrl());
+        // FailureHandler 설정
         setAuthenticationFailureHandler((request, response, authenticationException) -> {
             new JwtFailureHandler().onAuthenticationFailure(request, response, authenticationException);
         });
@@ -112,8 +115,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 jwtProperties.getAccessExpirationTime(),
                 refreshToken
         );
+        ResponseDto<TokenResponseDto> responseDto = ResponseDto.<TokenResponseDto>builder()
+                .success(true)
+                .status(HttpStatus.CREATED)
+                .data(tokenResponse)
+                .build();
 
-        String result = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tokenResponse);
+        String result = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(responseDto);
 
         PrintWriter printWriter = response.getWriter();
         printWriter.write(result);

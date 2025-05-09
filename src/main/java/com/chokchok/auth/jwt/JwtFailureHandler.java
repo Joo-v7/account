@@ -1,7 +1,10 @@
 package com.chokchok.auth.jwt;
 
-import com.chokchok.auth.common.dto.ResponseDto;
+import com.chokchok.auth.common.dto.ErrorResponseDto;
+import com.chokchok.auth.common.exception.code.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,15 +34,19 @@ public class JwtFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.info("JWT Authentication Failed Handler called");
 
-        ResponseDto<String> responseDto = ResponseDto.<String>builder()
-                .success(false)
-                .status(HttpStatus.UNAUTHORIZED)
-                .data("authentication failed")
-                .build();
+        ErrorResponseDto errorResponseDto = ErrorResponseDto.of(
+                HttpStatus.UNAUTHORIZED.value(),
+                ErrorCode.JWT_AUTHENTICATION_FAILED.getCode(),
+                "Login Failed"
+        );
+
+        // ErrorResponseDto의 LocalDateTime 직렬화를 위한 ObjectMapper 설정
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
         response.setContentType("application/json");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponseDto));
     }
 }

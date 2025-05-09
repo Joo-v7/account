@@ -162,12 +162,4 @@ public class AuthController {
         return !redisTemplate.opsForHash().keys(memberId).isEmpty();
     }
 
-    @GetMapping("/test")
-    public ResponseDto<?> test() {
-        return ResponseDto.<Void>builder()
-                .success(true)
-                .status(HttpStatus.OK)
-                .build();
-    }
-
 }
