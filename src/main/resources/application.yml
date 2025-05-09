@@ -1,12 +1,17 @@
 # default profile
 spring:
   application:
-    name: auth
+    name: auth-api
+  # env 파일 로드
+  config:
+    import: optional:file:.env[.properties]
 
+server:
   servlet:
     encoding:
       charset: UTF-8
       force: true
+
 
 # Eureka Client 설정
 eureka:
@@ -18,8 +23,14 @@ eureka:
 
 # JWT
 jwt:
-  secret: '5+Nw1z0e8odajGdU0dpEwJ10OQeAfLB40/gLy5g530M='
-  expiration_time: 3600
-  token_prefix: Bearer
-  header_string: Authorization
-  login_url: /api/account/login
+  secret: ${JWT_SECRETS}
+  token-prefix: Bearer
+  header-string: Authorization
+  access-expiration-time: 3600 # 1시간
+  refresh-expiration-time: 2592000 # 30일
+  login-url: /auth/login
+
+
+
+
+
