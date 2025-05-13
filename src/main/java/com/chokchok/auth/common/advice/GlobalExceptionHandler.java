@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidException.class)
     public ResponseEntity<?> handleInvalidException(InvalidException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponseDto.of(HttpStatus.BAD_REQUEST.value(), e.getErrorCode().getCode(), e.getMessage()));
+                .body(ErrorResponseDto.of(HttpStatus.BAD_REQUEST.value(), e.getErrorCode().getCode(), "=== AUTH === " + e.getMessage()));
     }
 
     /**
@@ -34,13 +34,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FeignClientException.class)
     public ResponseEntity<?> handleFeignClientException(FeignClientException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorResponseDto.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getErrorCode().getCode(), e.getMessage()));
+                .body(ErrorResponseDto.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getErrorCode().getCode(), "=== AUTH === " + e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorResponseDto.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), ErrorCode.AUTH_API_SERVER_ERROR.getCode(), e.getMessage()));
+                .body(ErrorResponseDto.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), ErrorCode.AUTH_API_SERVER_ERROR.getCode(), "=== AUTH === " + e.getMessage()));
     }
 
 }
