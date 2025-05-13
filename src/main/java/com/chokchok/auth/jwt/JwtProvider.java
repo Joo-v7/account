@@ -59,7 +59,7 @@ public class JwtProvider {
                     .and()
                 .subject(username)
                 .issuedAt(now)
-                .expiration(new Date(now.getTime() + tokenExpireTime))
+                .expiration(new Date(now.getTime() + tokenExpireTime * 1000))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -194,8 +194,10 @@ public class JwtProvider {
      */
     public boolean isValidToken(String token) {
         try {
-
-            Jwts.parser().verifyWith(getSecretKey()).build();
+            Jwts.parser()
+                    .verifyWith(getSecretKey())
+                    .build()
+                    .parseSignedClaims(token);
             return true;
 
         } catch(JwtException e) {

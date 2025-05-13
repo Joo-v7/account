@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,6 @@ public class AuthController {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String X_MEMBER_ID = "X-MEMBER-ID";
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * AccessToken 재발급
@@ -92,7 +92,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseDto<Void> logout(@RequestHeader(X_MEMBER_ID) String memberId, @RequestHeader(AUTHORIZATION_HEADER) String accessToken) {
+    public ResponseDto<Void> logout(@RequestHeader(X_MEMBER_ID) String memberId, @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
         log.info("Auth Server === Token Logout Called");
 
         // 헤더의 AccessToken 검증
@@ -105,6 +105,7 @@ public class AuthController {
             throw new InvalidException(ErrorCode.INVALID_MEMBER_SESSION, "이미 로그아웃 된 사용자입니다.");
         }
 
+        accessToken = accessToken.substring(7);
         // logout - redis에 있는 정보 삭제, accessToken 블랙리스트 등록
         authenticationService.doLogout(memberId, accessToken);
 

@@ -98,8 +98,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("Auth Server === Successful Authentication");
 
         // 토큰 생성
-        String accessToken = getAccessToken(authentication);
-        String refreshToken = getRefreshToken(authentication);
+        String accessToken = createAccessToken(authentication);
+        String refreshToken = createRefreshToken(authentication);
 
         // Redis에 토큰 저장
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
@@ -123,6 +123,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String result = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(responseDto);
 
+        response.setContentType("application/json;charset=UTF-8");
         PrintWriter printWriter = response.getWriter();
         printWriter.write(result);
         printWriter.close();
@@ -149,7 +150,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      * @param authentication
      * @return String - AccessToken
      */
-    private String getAccessToken(Authentication authentication) {
+    private String createAccessToken(Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
         return jwtProvider.generateAccessToken(
@@ -165,7 +166,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      * @param authentication
      * @return String - RefreshToken
      */
-    private String getRefreshToken(Authentication authentication) {
+    private String createRefreshToken(Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
         return jwtProvider.generateRefreshToken(
